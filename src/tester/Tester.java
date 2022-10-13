@@ -11,7 +11,9 @@ import java.util.Scanner;
 public class Tester {
 
     public static void main(String[] args) throws SQLException {
-
+        try{
+            
+        
         Scanner scan = new Scanner(System.in);
         String urlDB = "jdbc:mysql://localhost:3306/Students_Alamoudi_ALgowihi";
         String userDB = "ahmed";
@@ -42,15 +44,17 @@ public class Tester {
                     connect.search();
                     break;
                 default:
-                    System.out.println("enter correct input");
+                    System.out.println("Enter correct input");
             }
 
             showMenu();
             choice = scan.next();
             scan.nextLine();
         }
-        System.out.println("goodBey");
-
+        System.out.println("Thank You For Using Application...");
+        }catch(Exception e){
+            System.out.println("there is error " + e);
+        }
     }
 
     public static void showMenu() {
@@ -60,7 +64,6 @@ public class Tester {
         System.out.println("PRESS 3 to SERCHE student");
         System.out.println("PRESS 4 to EXIT App");
         System.out.println("**************************************************");
-
 
     }
 

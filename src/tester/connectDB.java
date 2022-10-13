@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+//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
 package tester;
 
 import java.sql.Connection;
@@ -11,7 +12,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.Scanner;
 
 //  @author AHMED ALGOWIHI
@@ -36,15 +36,14 @@ class connectDB {
 
     public void readAll() throws SQLException {
 
-        String selectquery = "select * from StudentsTBL_ahmed_ahmed";
-        PreparedStatement statement = connect.prepareStatement(selectquery);
+        String selectQuery = "select * from StudentsTBL_ahmed_ahmed";
+        PreparedStatement statement = connect.prepareStatement(selectQuery);
         ResultSet printResult = statement.executeQuery();
         System.out.printf(" %-5s  %-40s  %-15s  %4s %n", "ID", "NAME", "DATE", "GPA");
         System.out.println();
         System.out.println("-------------------------------------------------------------------------------------");
 
         while (printResult.next()) {
-//         System.out.printf("%5s %18s %17s %17s", printResult.getInt(1), printResult.getString(2), printResult.getDate(3),printResult.getDouble(4) );  
             System.out.printf(" %-5s  %-40s  %-15s  %4.2f %n", printResult.getInt(1), printResult.getString(2), printResult.getDate(3), printResult.getDouble(4));
 
             System.out.println();
@@ -66,22 +65,23 @@ class connectDB {
 
         pStmt.setDouble(3, GPA);
         int i = pStmt.executeUpdate();
-        System.out.println("\t++info added successfully++\n");
+        System.out.println("Student record Inserted Successfully...");
         pStmt.close();
     }
 
     public void search() throws SQLException {
         System.out.println("Enter Full Name:");
         String fullName = scan.nextLine();
-        String searchquery = "SELECT * FROM StudentsTBL_ahmed_ahmed WHERE FullName LIKE '%" + fullName + "%'";
+
+        String searchquery = "SELECT * FROM StudentsTBL_ahmed_ahmed WHERE FullName LIKE ? ";
 
         PreparedStatement statement = connect.prepareStatement(searchquery);
-
-//         statement.setString(1,fullName );
+        fullName = "%" + fullName + "%";
+        statement.setString(1, fullName);
         ResultSet searchResult = statement.executeQuery();
 //        searchResult.isBeforeFirst()
         if (!searchResult.isBeforeFirst()) {
-            System.out.println("not found");
+            System.out.println("there is no records available for this search criteria");
             return;
         }
         System.out.println("--------------------------------------------------------------------");
@@ -101,11 +101,11 @@ class connectDB {
         String name = scan.nextLine().trim();
         while (!name.matches(NAMES_PATTER)) {
             if (name.length() > 40 || name.length() < 3) {
-                System.out.println("your name too long ");
+                System.out.println("your name must be between 3 - 40 letters !!! ");
                 System.out.println("Enter Full Name:");
                 name = scan.nextLine();
             }
-            System.out.println("names just letters");
+            System.out.println("your name must contain letters only !!!");
             System.out.println("Enter Full Name:");
             name = scan.nextLine();
         }
@@ -113,9 +113,8 @@ class connectDB {
     }
 
     public String checkDate() {
-        String DATE_PATTER = "^((19|20)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$";
 
-        String pat = "((18|19|20)[0-9]{2}[-](0?[13578]|1[02])[-](0?[1-9]|[12][0-9]|3[01]))|"
+        String DATE_PATTER = "((18|19|20)[0-9]{2}[-](0?[13578]|1[02])[-](0?[1-9]|[12][0-9]|3[01]))|"
                 + "(18|19|20)[0-9]{2}[-](0?[469]|11)[-](0?[1-9]|[12][0-9]|30)|"
                 + "(18|19|20)[0-9]{2}[-](0?[2])[-](0?[1-9]|1[0-9]|2[0-8])|"
                 + "(((18|19|20)(04|08|[2468][048]|[13579][26]))|2000)[-](0?[2])[-]29";
@@ -123,7 +122,7 @@ class connectDB {
         System.out.println("Enter birth date in yyyy-mm-dd form:");
 
         String date = scan.nextLine();
-        while (!date.matches(pat)) {
+        while (!date.matches(DATE_PATTER)) {
             System.out.println("Enter correct birth date in yyyy-mm-dd form:");
             date = scan.nextLine();
 
@@ -134,16 +133,17 @@ class connectDB {
 
     public double checkGPA() {
         System.out.println("Enter student GPA \"must be between 0-4\"");
-        String GPA_PATTER = "[4]|([0-3])+([.][0-9]*)?";
+        String GPA_PATTER = "[4](.[0]+)?|([0-3])([.][0-9]+)?";
         String GPA = scan.nextLine();
 
         while (!GPA.matches(GPA_PATTER)) {
-            System.out.println("Enter student GPA \"must be between 0-4\"");
+            System.out.println("Enter correct student GPA \"must be between 0-4\"");
             GPA = scan.nextLine();
 
         }
-        if(GPA.length() > 4) GPA =  GPA.substring(0, 4);
-        System.out.println(GPA);
+        if (GPA.length() > 4) {
+            GPA = GPA.substring(0, 4);
+        }
 
         return Double.parseDouble(GPA);
 
