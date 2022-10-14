@@ -1,0 +1,3 @@
+urlDB = jdbc:mysql://localhost:3306/StudentsDB_Alamoudi_Algowihi
+userDB = Ahmed_Ahmed
+password = 0534889865
